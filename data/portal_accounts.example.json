@@ -1,0 +1,4 @@
+{
+  "_comment": "Copy this file to portal_accounts.json. This file is gitignored. It tracks job portal accounts created during the application process so the apply agent doesn't create duplicate accounts.",
+  "accounts": []
+}

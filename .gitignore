@@ -1,0 +1,63 @@
+# === SECRETS AND CREDENTIALS ===
+.env
+*.env
+.env.*
+!.env.example
+credentials.json
+service_account*.json
+gcp_key*.json
+config/user_profile.json
+
+# === PERSONAL APPLICATION DATA ===
+data/portal_accounts.json
+data/applications_submitted.json
+data/applications_verified.json
+data/jobs_found.json
+data/jobs_scored.json
+data/jobs_scored.json.bak
+data/jobs_archived.json
+data/pipeline_log.json
+data/run_summary.md
+data/verification_summary.md
+data/tailored_tracker.json
+data/company_careers.json
+
+# === GENERATED MATERIALS (personal resumes/cover letters) ===
+data/tailored_materials/
+data/screenshots/
+
+# === PERSONAL SOURCE FILES ===
+files/resume_base.md
+files/portfolio_details.md
+files/cover_letter_template.md
+files/*.pdf
+
+# === SESSION ARTIFACTS ===
+.playwright-mcp/
+*.png
+*.yml
+
+# === PYTHON ===
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+*.egg-info/
+dist/
+
+# === OS FILES ===
+.DS_Store
+Thumbs.db
+
+# === IDE ===
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# === LATEX ARTIFACTS ===
+templates/*.aux
+templates/*.log
+templates/*.out
+templates/*.synctex.gz

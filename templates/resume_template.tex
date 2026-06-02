@@ -1,0 +1,93 @@
+\documentclass[letterpaper,10pt]{article}
+
+\usepackage[top=0.3in, bottom=0.3in, left=0.45in, right=0.45in]{geometry}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{tabularx}
+
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt}
+
+\hypersetup{colorlinks=true, urlcolor=blue, linkcolor=blue, pdfborder={0 0 0}}
+
+% Tight lists
+\setlist[itemize]{
+  leftmargin=13pt,
+  itemsep=0pt,
+  parsep=0pt,
+  topsep=0pt,
+  partopsep=0pt,
+  label=\textbullet
+}
+
+% Slightly smaller body font
+\renewcommand{\normalsize}{\fontsize{9.5pt}{11.5pt}\selectfont}
+
+% Custom section heading: text on one line, rule on next line, then content
+\newcommand{\ressection}[1]{%
+  \vspace{4pt}%
+  {\bfseries\normalsize #1}%
+  \vspace{2pt}%
+  \hrule height 0.5pt%
+  \vspace{3pt}%
+}
+
+% Entry: bold left, date right
+\newcommand{\entry}[2]{%
+  \noindent\begin{tabularx}{\textwidth}{@{}X r@{}}
+    \textbf{#1} & #2
+  \end{tabularx}\vspace{-3pt}%
+}
+
+% Sub-entry italic
+\newcommand{\subentry}[1]{%
+  {\small\textit{#1}}\vspace{0pt}%
+}
+
+\begin{document}
+
+%==== NAME ====%
+\begin{center}
+  {\LARGE\textbf{@@FULLNAME@@}}\\[2pt]
+  {\small @@PHONE@@ $|$ @@EMAIL@@ $|$ @@LINKEDIN@@ $|$ @@PORTFOLIO@@ $|$ @@LOCATION@@}
+\end{center}
+\vspace{-2pt}
+
+%==== EDUCATION ====%
+\ressection{Education}
+
+\entry{Master of Science in Data Science}{@@EDU1DATES@@}
+\subentry{@@EDU1UNIVERSITY@@}\\
+{\small @@EDU1COURSEWORK@@}
+
+\vspace{1pt}
+\entry{Bachelor of Engineering in Electronics and Communication}{@@EDU2DATES@@}
+\subentry{@@EDU2UNIVERSITY@@}\\
+{\small @@EDU2COURSEWORK@@}
+
+%==== SKILLS ====%
+\ressection{Skills}
+\vspace{-2pt}
+\begin{itemize}
+@@SKILLS@@
+\end{itemize}
+
+%==== WORK EXPERIENCE ====%
+\ressection{Work Experience}
+
+@@WORKENTRIES@@
+
+%==== PROJECTS ====%
+\ressection{Projects}
+
+@@PROJECTENTRIES@@
+
+%==== AWARDS ====%
+\ressection{Awards}
+
+@@AWARDENTRIES@@
+
+\end{document}

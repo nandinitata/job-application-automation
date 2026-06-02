@@ -1,0 +1,70 @@
+{
+  "boards": [
+    {
+      "name": "LinkedIn",
+      "base_url": "https://www.linkedin.com/jobs/search/",
+      "search_params": {
+        "keywords": "{role}",
+        "location": "{location}",
+        "f_TPR": "r604800",
+        "f_E": "2,3"
+      },
+      "enabled": true,
+      "max_results": 40,
+      "requires_login": false,
+      "notes": "Use WebSearch for LinkedIn jobs (public results). Do NOT use Playwright to log in -- LinkedIn blocks automation and may lock the account."
+    },
+    {
+      "name": "Indeed",
+      "base_url": "https://www.indeed.com/jobs",
+      "search_params": {
+        "q": "{role}",
+        "l": "{location}",
+        "fromage": "7"
+      },
+      "enabled": true,
+      "max_results": 40,
+      "requires_login": true
+    },
+    {
+      "name": "Glassdoor",
+      "base_url": "https://www.glassdoor.com/Job/",
+      "enabled": true,
+      "max_results": 20,
+      "requires_login": true
+    },
+    {
+      "name": "ZipRecruiter",
+      "base_url": "https://www.ziprecruiter.com/jobs-search",
+      "search_params": {
+        "search": "{role}",
+        "location": "{location}",
+        "days": "7"
+      },
+      "enabled": true,
+      "max_results": 40,
+      "requires_login": false,
+      "notes": "No login required. Good for broad search coverage."
+    },
+    {
+      "name": "Greenhouse",
+      "base_url": "https://boards.greenhouse.io/",
+      "enabled": true,
+      "company_boards": []
+    },
+    {
+      "name": "Lever",
+      "base_url": "https://jobs.lever.co/",
+      "enabled": true,
+      "company_boards": []
+    },
+    {
+      "name": "Jobright",
+      "base_url": "https://jobright.ai/jobs/",
+      "enabled": true,
+      "max_results": 30,
+      "requires_login": true,
+      "notes": "Aggregator. Requires free account login (use config personal.job_portal_credentials). Listings redirect to company ATS for actual application -- apply agent must follow through, not submit on jobright.ai. Use Playwright; Vertex AI Search engine does not index this site yet."
+    }
+  ]
+}

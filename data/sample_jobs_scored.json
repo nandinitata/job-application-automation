@@ -1,0 +1,129 @@
+{
+  "_comment": "Sample scored jobs for the example persona (Senior Data Engineer, 5yr Databricks, 2yr Fabric). Your real jobs_scored.json is gitignored.",
+  "metadata": {
+    "scoring_date": "2026-06-01T10:30:00Z",
+    "total_scored": 5,
+    "newly_scored": 5,
+    "re_scored": 0,
+    "skipped_unchanged": 0,
+    "threshold_used": 60,
+    "jobs_above_threshold": 5
+  },
+  "scored_jobs": [
+    {
+      "job_id": "foundit-mindera-lead-fabric-004",
+      "title": "Lead Data Engineer — Microsoft Fabric",
+      "company": "Mindera",
+      "location": "Chennai, Tamil Nadu",
+      "remote_type": "remote",
+      "url": "https://www.foundit.in/job/lead-data-engineer-microsoft-fabric-mindera-chennai-6-to-10-years-jid-12345678",
+      "overall_score": 96,
+      "breakdown": {
+        "skill_match": 98,
+        "experience_match": 95,
+        "education_match": 85,
+        "location_match": 100,
+        "salary_match": 95,
+        "culture_fit": 80
+      },
+      "matched_skills": ["Microsoft Fabric", "OneLake", "Lakehouse", "Dataflows Gen2", "Data Activator", "Azure Synapse Analytics", "Python", "SQL"],
+      "missing_skills": [],
+      "recommendation": "strong_apply",
+      "reasoning": "Exceptional match. 2 years Fabric experience directly satisfies the 2+ year requirement. All core Fabric skills (OneLake, Lakehouse, Dataflows Gen2) are present. Remote role matches location preference. Salary ₹25-40 LPA aligns well with target. 6+ year requirement matches profile.",
+      "scored_date": "2026-06-01T10:30:00Z",
+      "application_status": "not_applied"
+    },
+    {
+      "job_id": "indeed-codetoday-senior-databricks-005",
+      "title": "Senior Databricks Engineer",
+      "company": "Codetoday.io",
+      "location": "Remote",
+      "remote_type": "remote",
+      "url": "https://in.indeed.com/viewjob?jk=abc123def456ghi789",
+      "overall_score": 93,
+      "breakdown": {
+        "skill_match": 97,
+        "experience_match": 88,
+        "education_match": 85,
+        "location_match": 100,
+        "salary_match": 65,
+        "culture_fit": 75
+      },
+      "matched_skills": ["Databricks", "Delta Lake", "Unity Catalog", "Databricks Workflows", "PySpark", "SQL", "Azure", "Terraform", "CI/CD", "MLflow"],
+      "missing_skills": ["AutoML (minor)"],
+      "recommendation": "strong_apply",
+      "reasoning": "Near-perfect skill match for a Databricks expert. 5 years Databricks experience strongly satisfies the 8+ year total requirement. Remote role is ideal. The only gap is AutoML which is a nice-to-have. Salary is on the lower end but the remote flexibility compensates.",
+      "scored_date": "2026-06-01T10:30:00Z",
+      "application_status": "not_applied"
+    },
+    {
+      "job_id": "linkedin-hoonartek-senior-databricks-002",
+      "title": "Senior Databricks Data Engineer",
+      "company": "HoonarTek",
+      "location": "Mumbai, Maharashtra",
+      "remote_type": "hybrid",
+      "url": "https://www.linkedin.com/jobs/view/senior-databricks-data-engineer-hoonartek-3456789012",
+      "overall_score": 91,
+      "breakdown": {
+        "skill_match": 95,
+        "experience_match": 92,
+        "education_match": 85,
+        "location_match": 75,
+        "salary_match": 88,
+        "culture_fit": 80
+      },
+      "matched_skills": ["Databricks", "Delta Lake", "Unity Catalog", "Databricks Workflows", "PySpark", "SQL", "Kafka", "Spark Structured Streaming", "Azure", "MLflow"],
+      "missing_skills": [],
+      "recommendation": "strong_apply",
+      "reasoning": "Excellent Databricks skill match. All required technologies present. Mumbai is within relocation preference. Salary ₹20-32 LPA is slightly below target but negotiable. 5+ year experience requirement is comfortably met.",
+      "scored_date": "2026-06-01T10:30:00Z",
+      "application_status": "not_applied"
+    },
+    {
+      "job_id": "naukri-ness-senior-de-003",
+      "title": "Senior Data Engineer",
+      "company": "Ness Digital Engineering",
+      "location": "Bengaluru, Karnataka",
+      "remote_type": "hybrid",
+      "url": "https://www.naukri.com/job-listings-senior-data-engineer-ness-digital-bengaluru-6-to-10-years-290520265678",
+      "overall_score": 89,
+      "breakdown": {
+        "skill_match": 92,
+        "experience_match": 90,
+        "education_match": 85,
+        "location_match": 100,
+        "salary_match": 90,
+        "culture_fit": 75
+      },
+      "matched_skills": ["Apache Spark", "PySpark", "SQL", "Delta Lake", "Databricks", "Azure ADLS Gen2", "CI/CD", "Git"],
+      "missing_skills": ["Scala (minor — PySpark sufficient)"],
+      "recommendation": "strong_apply",
+      "reasoning": "Strong match. Bengaluru location is ideal — no relocation needed. Salary ₹22-35 LPA fits target range well. All core Spark/Delta Lake skills present. Ness is a reputable firm with good data engineering practice.",
+      "scored_date": "2026-06-01T10:30:00Z",
+      "application_status": "not_applied"
+    },
+    {
+      "job_id": "naukri-datamaxis-senior-de-001",
+      "title": "Senior Data Engineer (Databricks & PySpark)",
+      "company": "DATAMAXIS",
+      "location": "Chennai, Tamil Nadu",
+      "remote_type": "hybrid",
+      "url": "https://www.naukri.com/job-listings-senior-data-engineer-datamaxis-chennai-5-to-8-years-010620261234",
+      "overall_score": 86,
+      "breakdown": {
+        "skill_match": 90,
+        "experience_match": 88,
+        "education_match": 85,
+        "location_match": 75,
+        "salary_match": 70,
+        "culture_fit": 70
+      },
+      "matched_skills": ["Databricks", "PySpark", "Delta Lake", "SQL", "Apache Kafka", "dbt", "Azure"],
+      "missing_skills": ["Great Expectations (easy to add)"],
+      "recommendation": "apply",
+      "reasoning": "Good match. All core Databricks and PySpark skills present. Chennai requires relocation but is a preferred location. Salary ₹18-28 LPA is below target but negotiable. Strong emphasis on mentoring aligns with senior profile.",
+      "scored_date": "2026-06-01T10:30:00Z",
+      "application_status": "not_applied"
+    }
+  ]
+}

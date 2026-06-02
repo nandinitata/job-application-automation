@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Job Pipeline Dashboard</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface2: #242836;
+    --border: #2e3348;
+    --text: #e1e4ed;
+    --text2: #8b8fa8;
+    --accent: #6c5ce7;
+    --green: #00b894;
+    --yellow: #fdcb6e;
+    --red: #e17055;
+    --blue: #74b9ff;
+    --orange: #f39c12;
+    --cyan: #00cec9;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+  }
+
+  /* Header */
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  header h1 { font-size: 18px; font-weight: 600; }
+  header .stats {
+    display: flex;
+    gap: 20px;
+    font-size: 13px;
+    color: var(--text2);
+  }
+  .stat-val { color: var(--text); font-weight: 600; font-size: 15px; }
+
+  /* Tabs */
+  .tabs {
+    display: flex;
+    gap: 0;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    overflow-x: auto;
+  }
+  .tab {
+    padding: 12px 20px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text2);
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .tab:hover { color: var(--text); }
+  .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .tab .tab-count {
+    background: var(--surface2);
+    padding: 1px 6px;
+    border-radius: 8px;
+    font-size: 10px;
+    margin-left: 6px;
+    color: var(--text2);
+  }
+
+  /* Controls */
+  .controls {
+    padding: 16px 24px;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  input, select {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    outline: none;
+  }
+  input:focus, select:focus { border-color: var(--accent); }
+  input[type="text"] { width: 280px; }
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+  .badge-strong_apply, .badge-applied, .badge-confirmed { background: rgba(0,184,148,0.15); color: var(--green); }
+  .badge-apply, .badge-email_received { background: rgba(116,185,255,0.15); color: var(--blue); }
+  .badge-maybe, .badge-needs_manual_review { background: rgba(253,203,110,0.15); color: var(--yellow); }
+  .badge-skip, .badge-failed, .badge-skipped { background: rgba(225,112,85,0.15); color: var(--red); }
+  .badge-not_applied, .badge-unconfirmed { background: rgba(139,143,168,0.15); color: var(--text2); }
+  .badge-submitted, .badge-portal_shows_applied { background: rgba(0,206,201,0.15); color: var(--cyan); }
+
+  /* Table */
+  .table-wrap {
+    padding: 0 24px 24px;
+    overflow-x: auto;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  th {
+    text-align: left;
+    padding: 10px 12px;
+    background: var(--surface2);
+    color: var(--text2);
+    font-weight: 600;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    position: sticky;
+    top: 0;
+    cursor: pointer;
+    white-space: nowrap;
+    user-select: none;
+  }
+  th:hover { color: var(--text); }
+  th .sort-arrow { margin-left: 4px; font-size: 10px; }
+  td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+    max-width: 300px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  tr:hover td { background: var(--surface); }
+  a { color: var(--blue); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* Score bar */
+  .score-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .score-bar .bar {
+    width: 60px;
+    height: 6px;
+    background: var(--surface2);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .score-bar .bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.3s;
+  }
+  .score-num { font-weight: 600; font-size: 14px; min-width: 28px; }
+
+  /* Detail panel */
+  .panel-overlay {
+    display: none;
+    position: fixed;
+    top: 0; right: 0; bottom: 0; left: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 200;
+  }
+  .panel-overlay.open { display: block; }
+  .panel {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 620px;
+    max-width: 90vw;
+    height: 100vh;
+    background: var(--surface);
+    border-left: 1px solid var(--border);
+    overflow-y: auto;
+    z-index: 201;
+    padding: 24px;
+  }
+  .panel h2 { font-size: 18px; margin-bottom: 4px; }
+  .panel .company { color: var(--text2); font-size: 14px; margin-bottom: 16px; }
+  .panel .section { margin-bottom: 16px; }
+  .panel .section h3 {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text2);
+    margin-bottom: 6px;
+  }
+  .panel .section p, .panel .section ul { font-size: 13px; color: var(--text); }
+  .panel .section ul { padding-left: 18px; }
+  .panel .close-btn {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .panel .score-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .panel .score-item {
+    background: var(--surface2);
+    padding: 8px 12px;
+    border-radius: 6px;
+  }
+  .panel .score-item label { font-size: 11px; color: var(--text2); }
+  .panel .score-item .val { font-size: 16px; font-weight: 600; }
+  .panel .tags { display: flex; flex-wrap: wrap; gap: 4px; }
+  .tag {
+    background: var(--surface2);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    color: var(--text2);
+  }
+  .tag.match { background: rgba(0,184,148,0.15); color: var(--green); }
+  .tag.missing { background: rgba(225,112,85,0.12); color: var(--red); }
+  .btn {
+    padding: 6px 14px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--surface2);
+    color: var(--text);
+    font-size: 12px;
+    cursor: pointer;
+    font-weight: 500;
+  }
+  .btn:hover { border-color: var(--accent); }
+  .btn-skip { color: var(--red); }
+  .btn-skip:hover { background: rgba(225,112,85,0.12); border-color: var(--red); }
+  .actions { display: flex; gap: 8px; margin-top: 12px; }
+
+  /* Careers cards */
+  .careers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 12px;
+    padding: 0 24px 24px;
+  }
+  .career-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+  }
+  .career-card:hover { border-color: var(--accent); }
+  .career-card h3 { font-size: 14px; margin-bottom: 6px; }
+  .career-card .meta { font-size: 12px; color: var(--text2); margin-bottom: 8px; }
+  .career-card .meta span { margin-right: 12px; }
+  .career-card a { font-size: 12px; }
+
+  /* Tailored materials */
+  .tailored-grid {
+    padding: 0 24px 24px;
+  }
+  .company-group {
+    margin-bottom: 20px;
+  }
+  .company-group-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 10px;
+  }
+  .company-group-header h3 {
+    font-size: 15px;
+    font-weight: 600;
+    text-transform: capitalize;
+  }
+  .company-group-header .file-count {
+    font-size: 11px;
+    color: var(--text2);
+    background: var(--surface2);
+    padding: 2px 8px;
+    border-radius: 8px;
+  }
+  .file-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 8px;
+  }
+  .file-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 12px 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: border-color 0.2s;
+  }
+  .file-card:hover { border-color: var(--accent); }
+  .file-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .file-icon.resume { background: rgba(108,92,231,0.15); color: var(--accent); }
+  .file-icon.cover { background: rgba(0,206,201,0.15); color: var(--cyan); }
+  .file-info { overflow: hidden; }
+  .file-info .name {
+    font-size: 13px;
+    font-weight: 500;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .file-info .type { font-size: 11px; color: var(--text2); }
+
+  /* Markdown preview in panel */
+  .md-preview {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 16px;
+    font-size: 13px;
+    line-height: 1.7;
+    white-space: pre-wrap;
+    max-height: 70vh;
+    overflow-y: auto;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+  }
+
+  /* Empty state */
+  .empty {
+    text-align: center;
+    padding: 80px 24px;
+    color: var(--text2);
+  }
+  .empty h2 { font-size: 16px; margin-bottom: 8px; color: var(--text); }
+  .empty p { font-size: 13px; }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .controls { flex-direction: column; }
+    input[type="text"] { width: 100%; }
+    .panel { width: 100vw; }
+    .careers-grid { grid-template-columns: 1fr; }
+    .file-list { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Job Pipeline Dashboard</h1>
+  <div class="stats" id="header-stats"></div>
+</header>
+
+<div class="tabs">
+  <div class="tab active" data-tab="found">Search Results</div>
+  <div class="tab" data-tab="scored">Scored Jobs</div>
+  <div class="tab" data-tab="careers">Careers Pages</div>
+  <div class="tab" data-tab="tailored">Tailored Materials</div>
+  <div class="tab" data-tab="applications">Applications</div>
+</div>
+
+<!-- FOUND TAB -->
+<div id="tab-found" class="tab-content">
+  <div class="controls">
+    <input type="text" id="search-found" placeholder="Search jobs, companies, skills...">
+    <select id="filter-board">
+      <option value="">All Boards</option>
+    </select>
+    <select id="filter-remote">
+      <option value="">All Locations</option>
+      <option value="remote">Remote</option>
+      <option value="hybrid">Hybrid</option>
+      <option value="onsite">Onsite</option>
+    </select>
+    <select id="filter-type">
+      <option value="">All Types</option>
+      <option value="full_time">Full Time</option>
+      <option value="internship">Internship</option>
+      <option value="contract">Contract</option>
+    </select>
+  </div>
+  <div class="table-wrap">
+    <table id="table-found">
+      <thead><tr>
+        <th data-col="title">Title <span class="sort-arrow"></span></th>
+        <th data-col="company">Company <span class="sort-arrow"></span></th>
+        <th data-col="location">Location <span class="sort-arrow"></span></th>
+        <th data-col="remote_type">Remote <span class="sort-arrow"></span></th>
+        <th data-col="salary_max">Salary <span class="sort-arrow"></span></th>
+        <th data-col="source_board">Board <span class="sort-arrow"></span></th>
+        <th data-col="employment_type">Type <span class="sort-arrow"></span></th>
+        <th data-col="seniority_level">Level <span class="sort-arrow"></span></th>
+        <th data-col="easy_apply">Easy Apply <span class="sort-arrow"></span></th>
+        <th data-col="posted_date">Posted <span class="sort-arrow"></span></th>
+      </tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- SCORED TAB -->
+<div id="tab-scored" class="tab-content" style="display:none">
+  <div class="controls">
+    <input type="text" id="search-scored" placeholder="Search scored jobs...">
+    <select id="filter-rec">
+      <option value="">All Recommendations</option>
+      <option value="strong_apply">Strong Apply</option>
+      <option value="apply">Apply</option>
+      <option value="maybe">Maybe</option>
+      <option value="skip">Skip</option>
+    </select>
+    <select id="filter-appstatus">
+      <option value="">All Statuses</option>
+      <option value="not_applied">Not Applied</option>
+      <option value="applied">Applied</option>
+      <option value="skipped">Skipped</option>
+      <option value="needs_manual_review">Needs Review</option>
+    </select>
+  </div>
+  <div class="table-wrap">
+    <table id="table-scored">
+      <thead><tr>
+        <th data-col="overall_score">Score <span class="sort-arrow"></span></th>
+        <th data-col="title">Title <span class="sort-arrow"></span></th>
+        <th data-col="company">Company <span class="sort-arrow"></span></th>
+        <th data-col="location">Location <span class="sort-arrow"></span></th>
+        <th data-col="recommendation">Rec <span class="sort-arrow"></span></th>
+        <th data-col="breakdown.skill_match">Skill <span class="sort-arrow"></span></th>
+        <th data-col="breakdown.experience_match">Exp <span class="sort-arrow"></span></th>
+        <th data-col="breakdown.education_match">Edu <span class="sort-arrow"></span></th>
+        <th data-col="application_status">Status <span class="sort-arrow"></span></th>
+        <th>Actions</th>
+      </tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- CAREERS TAB -->
+<div id="tab-careers" class="tab-content" style="display:none">
+  <div class="controls">
+    <input type="text" id="search-careers" placeholder="Search companies...">
+  </div>
+  <div class="careers-grid" id="careers-grid"></div>
+</div>
+
+<!-- TAILORED TAB -->
+<div id="tab-tailored" class="tab-content" style="display:none">
+  <div class="controls">
+    <input type="text" id="search-tailored" placeholder="Search by company or role...">
+  </div>
+  <div class="tailored-grid" id="tailored-grid"></div>
+</div>
+
+<!-- APPLICATIONS TAB -->
+<div id="tab-applications" class="tab-content" style="display:none">
+  <div class="controls">
+    <input type="text" id="search-apps" placeholder="Search applications...">
+  </div>
+  <div class="table-wrap">
+    <table id="table-apps">
+      <thead><tr>
+        <th data-col="title">Title</th>
+        <th data-col="company">Company</th>
+        <th data-col="status">Status</th>
+        <th data-col="method">Method</th>
+        <th data-col="submitted_at">Submitted</th>
+        <th data-col="confirmation_id">Confirmation</th>
+        <th>Notes</th>
+      </tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Detail Panel -->
+<div class="panel-overlay" id="panel-overlay">
+  <div class="panel" id="detail-panel"></div>
+</div>
+
+<script>
+let jobsFound = [];
+let jobsScored = [];
+let applications = [];
+let careers = [];
+let tailoredIndex = {};
+let sortState = { found: { col: null, asc: true }, scored: { col: 'overall_score', asc: false }, apps: { col: null, asc: true } };
+
+// -- Data Loading --
+async function loadData() {
+  try {
+    const [foundRes, scoredRes, appsRes, careersRes, tailoredRes] = await Promise.all([
+      fetch('/api/jobs_found').then(r => r.json()),
+      fetch('/api/jobs_scored').then(r => r.json()),
+      fetch('/api/applications').then(r => r.json()),
+      fetch('/api/company_careers').then(r => r.json()),
+      fetch('/api/tailored').then(r => r.json()),
+    ]);
+    jobsFound = foundRes.jobs || [];
+    jobsScored = scoredRes.scored_jobs || [];
+    applications = appsRes.applications || [];
+    careers = careersRes.companies || [];
+    tailoredIndex = tailoredRes || {};
+
+    updateStats(foundRes.metadata, scoredRes.metadata);
+    populateFilters();
+    renderFound();
+    renderScored();
+    renderCareers();
+    renderTailored();
+    renderApps();
+    updateTabCounts();
+  } catch (e) {
+    console.error('Failed to load data:', e);
+  }
+}
+
+function updateStats(foundMeta, scoredMeta) {
+  const el = document.getElementById('header-stats');
+  const aboveThreshold = scoredMeta?.jobs_above_threshold || jobsScored.filter(j => j.overall_score >= 60).length;
+  const applied = jobsScored.filter(j => j.application_status === 'applied').length;
+  const tailoredCount = Object.values(tailoredIndex).reduce((sum, files) => sum + files.length, 0);
+  el.innerHTML = `
+    <div>Found <span class="stat-val">${jobsFound.length}</span></div>
+    <div>Scored <span class="stat-val">${jobsScored.length}</span></div>
+    <div>Above Threshold <span class="stat-val">${aboveThreshold}</span></div>
+    <div>Tailored <span class="stat-val">${tailoredCount}</span></div>
+    <div>Applied <span class="stat-val">${applied}</span></div>
+  `;
+}
+
+function updateTabCounts() {
+  const tabs = document.querySelectorAll('.tab');
+  const counts = {
+    found: jobsFound.length,
+    scored: jobsScored.length,
+    careers: careers.length,
+    tailored: Object.keys(tailoredIndex).length,
+    applications: applications.length,
+  };
+  tabs.forEach(tab => {
+    const key = tab.dataset.tab;
+    const existing = tab.querySelector('.tab-count');
+    if (existing) existing.remove();
+    if (counts[key]) {
+      const span = document.createElement('span');
+      span.className = 'tab-count';
+      span.textContent = counts[key];
+      tab.appendChild(span);
+    }
+  });
+}
+
+function populateFilters() {
+  const boards = [...new Set(jobsFound.map(j => j.source_board).filter(Boolean))];
+  const sel = document.getElementById('filter-board');
+  const current = sel.value;
+  sel.innerHTML = '<option value="">All Boards</option>';
+  boards.forEach(b => { const o = document.createElement('option'); o.value = b; o.textContent = b; sel.appendChild(o); });
+  sel.value = current;
+}
+
+// -- Rendering --
+function getVal(obj, path) {
+  return path.split('.').reduce((o, k) => o?.[k], obj);
+}
+
+function scoreColor(v) {
+  if (v >= 80) return 'var(--green)';
+  if (v >= 60) return 'var(--blue)';
+  if (v >= 40) return 'var(--yellow)';
+  return 'var(--red)';
+}
+
+function scoreBar(v) {
+  return `<div class="score-bar">
+    <span class="score-num" style="color:${scoreColor(v)}">${v}</span>
+    <div class="bar"><div class="bar-fill" style="width:${v}%;background:${scoreColor(v)}"></div></div>
+  </div>`;
+}
+
+function badge(val) {
+  if (!val) return '';
+  return `<span class="badge badge-${val}">${val.replace(/_/g, ' ')}</span>`;
+}
+
+function fmtSalary(min, max, type) {
+  if (!min && !max) return '-';
+  const fmt = v => '$' + (v >= 1000 ? Math.round(v/1000) + 'k' : v);
+  const suffix = type === 'hourly' ? '/hr' : '';
+  if (min && max) return `${fmt(min)}-${fmt(max)}${suffix}`;
+  if (min) return `${fmt(min)}+${suffix}`;
+  return `Up to ${fmt(max)}${suffix}`;
+}
+
+function sortData(data, col, asc) {
+  if (!col) return data;
+  return [...data].sort((a, b) => {
+    let va = getVal(a, col), vb = getVal(b, col);
+    if (va == null) va = '';
+    if (vb == null) vb = '';
+    if (typeof va === 'number' && typeof vb === 'number') return asc ? va - vb : vb - va;
+    return asc ? String(va).localeCompare(String(vb)) : String(vb).localeCompare(String(va));
+  });
+}
+
+function filterFound() {
+  const q = document.getElementById('search-found').value.toLowerCase();
+  const board = document.getElementById('filter-board').value;
+  const remote = document.getElementById('filter-remote').value;
+  const etype = document.getElementById('filter-type').value;
+  return jobsFound.filter(j => {
+    if (q && !`${j.title} ${j.company} ${(j.skills_mentioned||[]).join(' ')} ${j.description||''}`.toLowerCase().includes(q)) return false;
+    if (board && j.source_board !== board) return false;
+    if (remote && j.remote_type !== remote) return false;
+    if (etype && j.employment_type !== etype) return false;
+    return true;
+  });
+}
+
+function renderFound() {
+  const filtered = filterFound();
+  const sorted = sortData(filtered, sortState.found.col, sortState.found.asc);
+  const tbody = document.querySelector('#table-found tbody');
+  if (!sorted.length) { tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;color:var(--text2);padding:40px">No jobs found. Run "start search" to begin.</td></tr>'; return; }
+  tbody.innerHTML = sorted.map(j => `
+    <tr style="cursor:pointer" onclick="showFoundDetail('${j.id}')">
+      <td title="${esc(j.title)}">${esc(j.title)}</td>
+      <td>${esc(j.company)}</td>
+      <td>${esc(j.location || '-')}</td>
+      <td>${badge(j.remote_type)}</td>
+      <td>${fmtSalary(j.salary_min, j.salary_max, j.salary_type)}</td>
+      <td>${esc(j.source_board || '-')}</td>
+      <td>${esc((j.employment_type||'').replace(/_/g,' '))}</td>
+      <td>${esc((j.seniority_level||'-').replace(/_/g,' '))}</td>
+      <td>${j.easy_apply ? '<span style="color:var(--green)">Yes</span>' : '-'}</td>
+      <td>${esc(j.posted_date || '-')}</td>
+    </tr>
+  `).join('');
+}
+
+function filterScored() {
+  const q = document.getElementById('search-scored').value.toLowerCase();
+  const rec = document.getElementById('filter-rec').value;
+  const status = document.getElementById('filter-appstatus').value;
+  return jobsScored.filter(j => {
+    if (q && !`${j.title} ${j.company} ${(j.matched_skills||[]).join(' ')}`.toLowerCase().includes(q)) return false;
+    if (rec && j.recommendation !== rec) return false;
+    if (status && j.application_status !== status) return false;
+    return true;
+  });
+}
+
+function renderScored() {
+  const filtered = filterScored();
+  const sorted = sortData(filtered, sortState.scored.col, sortState.scored.asc);
+  const tbody = document.querySelector('#table-scored tbody');
+  if (!sorted.length) { tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;color:var(--text2);padding:40px">No scored jobs. Run "score" after searching.</td></tr>'; return; }
+  tbody.innerHTML = sorted.map(j => `
+    <tr style="cursor:pointer" onclick="showScoredDetail('${j.job_id}')">
+      <td>${scoreBar(j.overall_score)}</td>
+      <td title="${esc(j.title)}">${esc(j.title)}</td>
+      <td>${esc(j.company)}</td>
+      <td>${esc(j.location || '-')}</td>
+      <td>${badge(j.recommendation)}</td>
+      <td>${j.breakdown?.skill_match ?? '-'}</td>
+      <td>${j.breakdown?.experience_match ?? '-'}</td>
+      <td>${j.breakdown?.education_match ?? '-'}</td>
+      <td>${badge(j.application_status || 'not_applied')}</td>
+      <td>
+        <button class="btn btn-skip" onclick="event.stopPropagation();markStatus('${j.job_id}','skipped')">Skip</button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function renderCareers() {
+  const q = (document.getElementById('search-careers')?.value || '').toLowerCase();
+  const grid = document.getElementById('careers-grid');
+  const filtered = careers.filter(c => !q || c.company_name?.toLowerCase().includes(q) || c.ats_platform?.toLowerCase().includes(q));
+  if (!filtered.length) {
+    grid.innerHTML = '<div class="empty"><h2>No careers pages yet</h2><p>Run the careers agent after searching to discover company career page URLs.</p></div>';
+    return;
+  }
+  grid.innerHTML = filtered.map(c => `
+    <div class="career-card">
+      <h3>${esc(c.company_name)}</h3>
+      <div class="meta">
+        ${c.ats_platform ? `<span>ATS: <strong>${esc(c.ats_platform)}</strong></span>` : ''}
+        ${c.verified ? '<span style="color:var(--green)">Verified</span>' : '<span style="color:var(--yellow)">Unverified</span>'}
+      </div>
+      ${c.careers_url ? `<p><a href="${esc(c.careers_url)}" target="_blank">Careers Page</a></p>` : '<p style="color:var(--text2)">No careers URL found</p>'}
+      ${c.direct_search_url ? `<p><a href="${esc(c.direct_search_url)}" target="_blank">Direct Search</a></p>` : ''}
+      ${c.notes ? `<p style="font-size:11px;color:var(--text2);margin-top:6px">${esc(c.notes)}</p>` : ''}
+    </div>
+  `).join('');
+}
+
+function renderTailored() {
+  const q = (document.getElementById('search-tailored')?.value || '').toLowerCase();
+  const grid = document.getElementById('tailored-grid');
+  const companies = Object.keys(tailoredIndex).filter(c => !q || c.includes(q) || tailoredIndex[c].some(f => f.name.toLowerCase().includes(q)));
+
+  if (!companies.length) {
+    grid.innerHTML = '<div class="empty"><h2>No tailored materials yet</h2><p>Run "tailor" after scoring to generate customized resumes and cover letters.</p></div>';
+    return;
+  }
+
+  grid.innerHTML = companies.map(company => {
+    const files = tailoredIndex[company];
+    const resumes = files.filter(f => f.type === 'resume');
+    const covers = files.filter(f => f.type === 'cover_letter');
+    return `
+      <div class="company-group">
+        <div class="company-group-header">
+          <h3>${esc(company)}</h3>
+          <span class="file-count">${resumes.length} resume${resumes.length!==1?'s':''}, ${covers.length} cover letter${covers.length!==1?'s':''}</span>
+        </div>
+        <div class="file-list">
+          ${files.map(f => `
+            <div class="file-card" onclick="showTailoredFile('${esc(f.path)}','${esc(f.name)}','${f.type}', ${f.has_pdf ? `'${esc(f.pdf_path)}'` : 'null'})">
+              <div class="file-icon ${f.type === 'resume' ? 'resume' : 'cover'}">${f.type === 'resume' ? 'R' : 'CL'}</div>
+              <div class="file-info">
+                <div class="name" title="${esc(f.name)}">${esc(f.name)}</div>
+                <div class="type">${f.type === 'resume' ? 'Resume' : 'Cover Letter'} &middot; ${Math.round(f.size/1024)}KB ${f.has_pdf ? '<span style="color:var(--green);margin-left:4px">PDF</span>' : ''}</div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function renderApps() {
+  const q = (document.getElementById('search-apps')?.value || '').toLowerCase();
+  const filtered = applications.filter(a => !q || `${a.title} ${a.company}`.toLowerCase().includes(q));
+  const tbody = document.querySelector('#table-apps tbody');
+  if (!filtered.length) { tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--text2);padding:40px">No applications yet.</td></tr>'; return; }
+  tbody.innerHTML = filtered.map(a => `
+    <tr>
+      <td>${esc(a.title)}</td>
+      <td>${esc(a.company)}</td>
+      <td>${badge(a.status)}</td>
+      <td>${esc((a.method||'').replace(/_/g,' '))}</td>
+      <td>${a.submitted_at ? new Date(a.submitted_at).toLocaleDateString() : '-'}</td>
+      <td>${esc(a.confirmation_id || '-')}</td>
+      <td title="${esc(a.notes||'')}">${esc(a.notes || '-')}</td>
+    </tr>
+  `).join('');
+}
+
+// -- Detail Panels --
+function showFoundDetail(id) {
+  const j = jobsFound.find(x => x.id === id);
+  if (!j) return;
+  const panel = document.getElementById('detail-panel');
+  panel.innerHTML = `
+    <button class="close-btn" onclick="closePanel()">&times;</button>
+    <h2>${esc(j.title)}</h2>
+    <div class="company">${esc(j.company)} &middot; ${esc(j.location||'')} &middot; ${badge(j.remote_type)}</div>
+
+    <div class="section">
+      <h3>Details</h3>
+      <p><strong>Board:</strong> ${esc(j.source_board||'-')} &middot; <strong>Type:</strong> ${esc((j.employment_type||'-').replace(/_/g,' '))} &middot; <strong>Level:</strong> ${esc((j.seniority_level||'-').replace(/_/g,' '))}</p>
+      <p><strong>Salary:</strong> ${fmtSalary(j.salary_min,j.salary_max,j.salary_type)} &middot; <strong>Visa:</strong> ${esc(j.visa_sponsorship||'not mentioned')}</p>
+      <p><strong>Posted:</strong> ${esc(j.posted_date||'-')} &middot; <strong>Found:</strong> ${esc(j.found_date||'-')}</p>
+      ${j.company_careers_url ? `<p><a href="${esc(j.company_careers_url)}" target="_blank">Company Careers Page</a></p>` : ''}
+      ${j.url ? `<p><a href="${esc(j.url)}" target="_blank">Open Job Listing</a></p>` : ''}
+    </div>
+
+    ${j.skills_mentioned?.length ? `<div class="section"><h3>Skills Mentioned</h3><div class="tags">${j.skills_mentioned.map(s=>`<span class="tag">${esc(s)}</span>`).join('')}</div></div>` : ''}
+    ${j.requirements?.length ? `<div class="section"><h3>Requirements</h3><ul>${j.requirements.map(r=>`<li>${esc(r)}</li>`).join('')}</ul></div>` : ''}
+    ${j.nice_to_haves?.length ? `<div class="section"><h3>Nice to Have</h3><ul>${j.nice_to_haves.map(r=>`<li>${esc(r)}</li>`).join('')}</ul></div>` : ''}
+    ${j.responsibilities?.length ? `<div class="section"><h3>Responsibilities</h3><ul>${j.responsibilities.map(r=>`<li>${esc(r)}</li>`).join('')}</ul></div>` : ''}
+    ${j.benefits?.length ? `<div class="section"><h3>Benefits</h3><ul>${j.benefits.map(r=>`<li>${esc(r)}</li>`).join('')}</ul></div>` : ''}
+    ${j.description ? `<div class="section"><h3>Full Description</h3><p style="white-space:pre-wrap;font-size:12px;max-height:400px;overflow-y:auto">${esc(j.description)}</p></div>` : ''}
+  `;
+  document.getElementById('panel-overlay').classList.add('open');
+}
+
+function showScoredDetail(id) {
+  const j = jobsScored.find(x => x.job_id === id);
+  const found = jobsFound.find(x => x.id === id);
+  if (!j) return;
+  const b = j.breakdown || {};
+
+  // Check if tailored materials exist for this job
+  const companySlug = j.company.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '');
+  const companyFiles = tailoredIndex[companySlug] || [];
+  const jobFiles = companyFiles.filter(f => f.name.includes(j.job_id));
+
+  const panel = document.getElementById('detail-panel');
+  panel.innerHTML = `
+    <button class="close-btn" onclick="closePanel()">&times;</button>
+    <h2>${esc(j.title)}</h2>
+    <div class="company">${esc(j.company)} &middot; ${esc(j.location||'')} &middot; ${badge(j.recommendation)}</div>
+
+    <div class="section">
+      <h3>Overall Score</h3>
+      ${scoreBar(j.overall_score)}
+    </div>
+
+    <div class="section">
+      <h3>Score Breakdown</h3>
+      <div class="score-grid">
+        <div class="score-item"><label>Skill Match</label><div class="val" style="color:${scoreColor(b.skill_match||0)}">${b.skill_match??'-'}</div></div>
+        <div class="score-item"><label>Experience</label><div class="val" style="color:${scoreColor(b.experience_match||0)}">${b.experience_match??'-'}</div></div>
+        <div class="score-item"><label>Education</label><div class="val" style="color:${scoreColor(b.education_match||0)}">${b.education_match??'-'}</div></div>
+        <div class="score-item"><label>Location</label><div class="val" style="color:${scoreColor(b.location_match||0)}">${b.location_match??'-'}</div></div>
+        <div class="score-item"><label>Salary</label><div class="val" style="color:${scoreColor(b.salary_match||0)}">${b.salary_match??'-'}</div></div>
+        <div class="score-item"><label>Culture Fit</label><div class="val" style="color:${scoreColor(b.culture_fit||0)}">${b.culture_fit??'-'}</div></div>
+      </div>
+    </div>
+
+    ${j.reasoning ? `<div class="section"><h3>Reasoning</h3><p>${esc(j.reasoning)}</p></div>` : ''}
+
+    ${j.matched_skills?.length ? `<div class="section"><h3>Matched Skills</h3><div class="tags">${j.matched_skills.map(s=>`<span class="tag match">${esc(s)}</span>`).join('')}</div></div>` : ''}
+    ${j.missing_skills?.length ? `<div class="section"><h3>Missing Skills</h3><div class="tags">${j.missing_skills.map(s=>`<span class="tag missing">${esc(s)}</span>`).join('')}</div></div>` : ''}
+
+    ${jobFiles.length ? `
+      <div class="section">
+        <h3>Tailored Materials</h3>
+        <div class="file-list" style="margin-top:8px">
+          ${jobFiles.map(f => `
+            <div class="file-card" onclick="showTailoredFile('${esc(f.path)}','${esc(f.name)}','${f.type}', ${f.has_pdf ? `'${esc(f.pdf_path)}'` : 'null'})">
+              <div class="file-icon ${f.type === 'resume' ? 'resume' : 'cover'}">${f.type === 'resume' ? 'R' : 'CL'}</div>
+              <div class="file-info">
+                <div class="name">${esc(f.name)}</div>
+                <div class="type">${f.type === 'resume' ? 'Resume' : 'Cover Letter'} ${f.has_pdf ? '<span style="color:var(--green);margin-left:4px">PDF</span>' : ''}</div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    ` : ''}
+
+    <div class="section">
+      <h3>Application Status</h3>
+      <p>${badge(j.application_status || 'not_applied')}</p>
+      <div class="actions">
+        <button class="btn btn-skip" onclick="markStatus('${j.job_id}','skipped');closePanel()">Mark Skip</button>
+        ${j.url ? `<a class="btn" href="${esc(j.url)}" target="_blank">Open Listing</a>` : ''}
+        ${found?.url ? `<a class="btn" href="${esc(found.url)}" target="_blank">Open Listing</a>` : ''}
+        ${found?.company_careers_url ? `<a class="btn" href="${esc(found.company_careers_url)}" target="_blank">Careers Page</a>` : ''}
+      </div>
+    </div>
+
+    ${found?.description ? `<div class="section"><h3>Full Description</h3><p style="white-space:pre-wrap;font-size:12px;max-height:300px;overflow-y:auto">${esc(found.description)}</p></div>` : ''}
+  `;
+  document.getElementById('panel-overlay').classList.add('open');
+}
+
+async function showTailoredFile(path, name, type, pdfPath) {
+  const panel = document.getElementById('detail-panel');
+  const pdfUrl = pdfPath ? '/api/tailored_file/' + encodeURIComponent(pdfPath) : null;
+  panel.innerHTML = `
+    <button class="close-btn" onclick="closePanel()">&times;</button>
+    <h2>${type === 'resume' ? 'Tailored Resume' : 'Tailored Cover Letter'}</h2>
+    <div class="company">${esc(name)}</div>
+    ${pdfUrl ? `
+      <div class="actions" style="margin-bottom:12px">
+        <a class="btn" href="${pdfUrl}" target="_blank" style="color:var(--green)">Open PDF</a>
+        <a class="btn" href="${pdfUrl}" download="${esc(name.replace('.md','.pdf'))}">Download PDF</a>
+      </div>
+    ` : ''}
+    <div class="section">
+      <h3>Markdown Source</h3>
+      <div class="md-preview" id="file-content">Loading...</div>
+    </div>
+  `;
+  document.getElementById('panel-overlay').classList.add('open');
+  try {
+    const res = await fetch('/api/tailored_file/' + encodeURIComponent(path));
+    const text = await res.text();
+    document.getElementById('file-content').textContent = text;
+  } catch (e) {
+    document.getElementById('file-content').textContent = 'Failed to load file.';
+  }
+}
+
+function closePanel() {
+  document.getElementById('panel-overlay').classList.remove('open');
+}
+
+// -- Actions --
+async function markStatus(jobId, status) {
+  await fetch('/api/update_status', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ job_id: jobId, status })
+  });
+  const job = jobsScored.find(j => j.job_id === jobId);
+  if (job) job.application_status = status;
+  renderScored();
+}
+
+// -- Events --
+function esc(s) { if (!s) return ''; const d = document.createElement('div'); d.textContent = String(s); return d.innerHTML; }
+
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
+    tab.classList.add('active');
+    document.getElementById(`tab-${tab.dataset.tab}`).style.display = '';
+  });
+});
+
+document.querySelectorAll('th[data-col]').forEach(th => {
+  th.addEventListener('click', () => {
+    const table = th.closest('table').id;
+    const key = table === 'table-found' ? 'found' : table === 'table-scored' ? 'scored' : 'apps';
+    const col = th.dataset.col;
+    if (sortState[key].col === col) sortState[key].asc = !sortState[key].asc;
+    else { sortState[key].col = col; sortState[key].asc = true; }
+    if (key === 'found') renderFound();
+    else if (key === 'scored') renderScored();
+    else renderApps();
+  });
+});
+
+['search-found', 'filter-board', 'filter-remote', 'filter-type'].forEach(id => {
+  document.getElementById(id)?.addEventListener('input', renderFound);
+  document.getElementById(id)?.addEventListener('change', renderFound);
+});
+['search-scored', 'filter-rec', 'filter-appstatus'].forEach(id => {
+  document.getElementById(id)?.addEventListener('input', renderScored);
+  document.getElementById(id)?.addEventListener('change', renderScored);
+});
+document.getElementById('search-apps')?.addEventListener('input', renderApps);
+document.getElementById('search-careers')?.addEventListener('input', renderCareers);
+document.getElementById('search-tailored')?.addEventListener('input', renderTailored);
+
+document.getElementById('panel-overlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('panel-overlay')) closePanel();
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closePanel(); });
+
+// Auto-refresh every 30s
+loadData();
+setInterval(loadData, 30000);
+</script>
+</body>
+</html>

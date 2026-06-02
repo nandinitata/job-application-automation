@@ -1,0 +1,78 @@
+{
+  "_comment": "Copy this file to user_profile.json and replace all YOUR_* placeholders with your real information. user_profile.json is gitignored and will never be committed.",
+  "personal": {
+    "first_name": "YOUR_FIRST_NAME",
+    "last_name": "YOUR_LAST_NAME",
+    "email": "YOUR_EMAIL@gmail.com",
+    "phone": "+91-YOUR_PHONE_NUMBER",
+    "linkedin_url": "https://linkedin.com/in/YOUR_LINKEDIN_HANDLE",
+    "github_url": "https://github.com/YOUR_GITHUB_USERNAME",
+    "portfolio_url": "https://YOUR_PORTFOLIO_URL",
+    "location": "Bengaluru, Karnataka",
+    "address": "YOUR_FULL_ADDRESS, Bengaluru, Karnataka 560001",
+    "available_start_date": "Immediately",
+    "notice_period": "30 days",
+    "education_level": "Bachelor's Degree",
+    "gender": "Prefer not to say",
+    "sms_consent": true,
+    "job_portal_credentials": {
+      "email": "YOUR_EMAIL@gmail.com",
+      "password": "YOUR_PORTAL_PASSWORD",
+      "first_name": "YOUR_FIRST_NAME",
+      "last_name": "YOUR_LAST_NAME"
+    }
+  },
+  "preferences": {
+    "target_roles": [
+      "Senior Data Engineer",
+      "Lead Data Engineer",
+      "Principal Data Engineer",
+      "Senior Analytics Engineer",
+      "Senior Big Data Engineer",
+      "Data Engineering Lead",
+      "Senior Databricks Engineer",
+      "Senior Microsoft Fabric Engineer"
+    ],
+    "target_companies": [],
+    "excluded_companies": [],
+    "location_preferences": {
+      "remote": true,
+      "hybrid": true,
+      "onsite": true,
+      "preferred_locations": [
+        "Bengaluru, Karnataka",
+        "Hyderabad, Telangana",
+        "Mumbai, Maharashtra",
+        "Pune, Maharashtra",
+        "Chennai, Tamil Nadu",
+        "Remote"
+      ],
+      "willing_to_relocate": true,
+      "current_address": "Bengaluru, Karnataka"
+    },
+    "salary_min": "2500000",
+    "salary_max": "5000000",
+    "salary_currency": "INR",
+    "experience_level": ["senior"],
+    "job_type": ["full_time"],
+    "industry_preferences": [
+      "Technology",
+      "Data & Analytics",
+      "FinTech",
+      "E-commerce",
+      "Consulting",
+      "Cloud & Infrastructure",
+      "HealthTech"
+    ],
+    "company_size_preference": "any",
+    "date_posted_filter": "past_week"
+  },
+  "pipeline_settings": {
+    "max_jobs_per_board": 80,
+    "max_pages_per_board": 3,
+    "score_threshold": 60,
+    "max_applications_per_run": 10,
+    "require_confirmation_before_apply": true,
+    "rate_limit_seconds": 5
+  }
+}

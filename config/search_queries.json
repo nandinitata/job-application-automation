@@ -1,0 +1,143 @@
+{
+  "queries": [
+    {
+      "label": "ML Engineer - General",
+      "keywords": "Machine Learning Engineer",
+      "location": "United States",
+      "remote_filter": true
+    },
+    {
+      "label": "Data Scientist - Entry Level",
+      "keywords": "Data Scientist entry level new grad 2026",
+      "location": "United States",
+      "remote_filter": true
+    },
+    {
+      "label": "AI Engineer",
+      "keywords": "AI Engineer LLM NLP",
+      "location": "United States",
+      "remote_filter": true
+    },
+    {
+      "label": "ML Engineer - Colorado",
+      "keywords": "Machine Learning Engineer",
+      "location": "Colorado",
+      "remote_filter": false
+    },
+    {
+      "label": "Data Engineer",
+      "keywords": "Data Engineer Python SQL",
+      "location": "United States",
+      "remote_filter": true
+    },
+    {
+      "label": "New Grad SWE - ML Focus",
+      "keywords": "Software Engineer new grad 2026 machine learning",
+      "location": "United States",
+      "remote_filter": true
+    },
+    {
+      "label": "Applied Scientist",
+      "keywords": "Applied Scientist NLP machine learning",
+      "location": "United States",
+      "remote_filter": true
+    },
+    {
+      "label": "ML Research Engineer",
+      "keywords": "ML Research Engineer PyTorch",
+      "location": "United States",
+      "remote_filter": true
+    },
+    {
+      "label": "NLP Engineer",
+      "keywords": "NLP Engineer transformer language models",
+      "location": "United States",
+      "remote_filter": true
+    },
+    {
+      "label": "AI/ML Intern",
+      "keywords": "AI intern machine learning intern",
+      "location": "United States",
+      "remote_filter": true
+    },
+    {
+      "label": "Data Analyst",
+      "keywords": "Data Analyst SQL Python",
+      "location": "United States",
+      "remote_filter": true
+    },
+    {
+      "label": "Applied AI Engineer",
+      "keywords": "Applied AI Engineer LLM NLP",
+      "location": "United States",
+      "remote_filter": true
+    },
+    {
+      "label": "Software Engineer - ML/AI",
+      "keywords": "Software Engineer machine learning AI",
+      "location": "United States",
+      "remote_filter": true
+    },
+    {
+      "label": "Data Scientist - Research Focus",
+      "keywords": "Data Scientist research machine learning",
+      "location": "United States",
+      "remote_filter": true
+    },
+    {
+      "label": "ML Engineer - Remote",
+      "keywords": "Machine Learning Engineer",
+      "location": "Remote",
+      "remote_filter": true
+    },
+    {
+      "label": "Data Scientist - Remote",
+      "keywords": "Data Scientist",
+      "location": "Remote",
+      "remote_filter": true
+    },
+    {
+      "label": "AI Engineer - Remote",
+      "keywords": "AI Engineer LLM NLP",
+      "location": "Remote",
+      "remote_filter": true
+    },
+    {
+      "label": "Data Engineer - Remote",
+      "keywords": "Data Engineer Python SQL",
+      "location": "Remote",
+      "remote_filter": true
+    },
+    {
+      "label": "Software Engineer - ML/AI - Remote",
+      "keywords": "Software Engineer machine learning AI",
+      "location": "Remote",
+      "remote_filter": true
+    }
+    ,
+    {
+      "label": "NLP Engineer - Remote",
+      "keywords": "NLP Engineer transformer language models",
+      "location": "Remote",
+      "remote_filter": true
+    },
+    {
+      "label": "Applied AI Engineer - Remote",
+      "keywords": "Applied AI Engineer LLM NLP",
+      "location": "Remote",
+      "remote_filter": true
+    },
+    {
+      "label": "AI/ML Intern - Remote",
+      "keywords": "AI intern machine learning intern",
+      "location": "Remote",
+      "remote_filter": true
+    },
+    {
+      "label": "Data Analyst - Remote",
+      "keywords": "Data Analyst SQL Python",
+      "location": "Remote",
+      "remote_filter": true
+    }
+  ]
+}

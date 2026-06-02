@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash",
+      "Read",
+      "Write",
+      "Edit",
+      "Glob",
+      "Grep",
+      "WebSearch",
+      "WebFetch",
+      "mcp__plugin_playwright_playwright__*",
+      "mcp__claude_ai_Gmail__*",
+      "mcp__claude_ai_Notion__*",
+      "mcp__plugin_context7_context7__*",
+      "Bash(python3 scripts/md_to_pdf.py *)",
+      "Bash(rm -f /tmp/resume_filled.aux /tmp/resume_filled.log)",
+      "Bash(pdflatex -interaction=nonstopmode -output-directory=/tmp /tmp/resume_filled.tex)",
+      "Read(//tmp/**)"
+    ]
+  }
+}
